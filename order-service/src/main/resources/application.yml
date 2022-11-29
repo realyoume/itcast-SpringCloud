@@ -1,0 +1,59 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/cloud_order?useSSL=false
+    username: root
+    password: 2020
+    driver-class-name: com.mysql.jdbc.Driver
+  application:
+    name: orderservice
+  cloud:
+    nacos:
+      server-addr: localhost:8848 # nacos服务地址
+      discovery:
+        cluster-name: HZ
+        #namespace: 7a5618ff-a674-46dd-99a7-33da5f094f7f # 命名空间ID
+        ephemeral: false # 是否是临时实例
+
+mybatis:
+  type-aliases-package: cn.itcast.user.pojo
+  configuration:
+    map-underscore-to-camel-case: true
+
+logging:
+  level:
+    cn.itcast: debug
+  pattern:
+    dateformat: MM-dd HH:mm:ss:SSS
+
+#eureka:
+#  client:
+#    service-url:  # eureka的地址信息
+#      defaultZone: http://127.0.0.1:10086/eureka
+
+userservice:
+  ribbon:
+    NFLoadBalancerRuleClassName: com.alibaba.cloud.nacos.ribbon.NacosRule # 优先寻找同集群下的服务，再随机选择
+#    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule # 负载均衡策略
+
+ribbon:
+  eager-load:
+    enabled: true
+    clients:
+      - userservice
+
+
+#feign:
+#  client:
+#    config:
+#      default:    # 对所有访问的微服务生效
+#        loggerLevel: FULL     # 日志级别
+
+feign:
+  httpclient:
+    enabled: true # 打开httpclient
+    max-connections: 200 # 最大链接数
+    max-connections-per-route: 50 # 单个路径的最大连接数
+
